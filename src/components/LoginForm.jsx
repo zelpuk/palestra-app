@@ -38,32 +38,22 @@ export default function LoginForm() {
         setError(data.error || "Credenziali errate.");
       } else {
         setSuccess("Login effettuato con successo!");
-        // Salva il token e i dati utente
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        // Breve delay per mostrare il messaggio di successo
-        setTimeout(() => {
-          navigate("/");
-        }, 500);
+        window.dispatchEvent(new Event('storage'));
+        navigate("/home", { replace: true });
       }
-    } catch {
+    } catch (error) {
+      console.error('Errore durante il login:', error);
       setError("Errore di rete, riprova.");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        maxWidth: "400px",
-        margin: "auto",
-        padding: "1rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
-        fontSize: "1.1rem"
-      }}
-    >
+    <form onSubmit={handleSubmit} className="login-form">
+      {error && <div className="error-message">{error}</div>}
+      {success && <div className="success-message">{success}</div>}
+      
       <input
         type="email"
         name="email"
@@ -71,7 +61,7 @@ export default function LoginForm() {
         value={form.email}
         onChange={handleChange}
         required
-        style={{ padding: "10px", fontSize: "1rem", borderRadius: "5px", border: "1px solid #ccc" }}
+        className="form-input"
       />
 
       <input
@@ -81,26 +71,12 @@ export default function LoginForm() {
         value={form.password}
         onChange={handleChange}
         required
-        style={{ padding: "10px", fontSize: "1rem", borderRadius: "5px", border: "1px solid #ccc" }}
+        className="form-input"
       />
 
-      <button
-        type="submit"
-        style={{
-          padding: "12px",
-          backgroundColor: "#007bff",
-          color: "white",
-          fontSize: "1.1rem",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer"
-        }}
-      >
+      <button type="submit" className="login-button">
         Accedi
       </button>
-
-      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
-      {success && <p style={{ color: "green", textAlign: "center" }}>{success}</p>}
     </form>
   );
 }

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useEffect, useState } from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import SplashPage from "./pages/SplashPage";
 import Home from "./pages/Home";
 import Schede from "./pages/Schede";
 import Profilo from "./pages/Profilo";
@@ -12,6 +13,11 @@ import "./pages/BottomNavbar.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
 
   useEffect(() => {
     const checkAuth = () => {
@@ -29,9 +35,8 @@ function App() {
       <div className="page-container">
         <div className="content-wrapper">
           <Routes>
-            {/* Rotte protette */}
-            <Route
-              path="/"
+            {/* Rotte protette */}            <Route
+              path="/home"
               element={
                 <ProtectedRoute>
                   <Home />
@@ -61,16 +66,18 @@ function App() {
                   <Progressi />
                 </ProtectedRoute>
               }
+            />            {/* Rotte pubbliche */}
+            <Route
+              path="/"
+              element={isAuthenticated ? <Navigate to="/home" replace /> : <SplashPage />}
             />
-
-            {/* Rotte pubbliche */}
             <Route
               path="/login"
-              element={isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />}
+              element={isAuthenticated ? <Navigate to="/home" replace /> : <LoginPage />}
             />
             <Route
               path="/register"
-              element={isAuthenticated ? <Navigate to="/" replace /> : <RegisterPage />}
+              element={isAuthenticated ? <Navigate to="/home" replace /> : <RegisterPage />}
             />
 
             {/* Fallback per rotte non esistenti */}

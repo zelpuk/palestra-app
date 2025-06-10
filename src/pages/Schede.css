@@ -1,0 +1,144 @@
+.schede-container {
+  min-height: 100vh;
+  background: var(--background-dark);
+  color: var(--text-primary);
+  padding-bottom: 80px;
+}
+
+.schede-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('../assets/allenamenti-foto.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 2rem 1.5rem;
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.schede-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.schede-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.schede-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1rem;
+}
+
+.scheda-card {
+  background: var(--card-background);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.scheda-card:hover {
+  transform: translateY(-5px);
+}
+
+.scheda-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.scheda-icon {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.scheda-info {
+  flex: 1;
+}
+
+.scheda-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.scheda-date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.scheda-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.add-scheda-button {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  transition: transform 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.add-scheda-button:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 640px) {
+  .schede-title {
+    font-size: 1.75rem;
+  }
+  
+  .schede-subtitle {
+    font-size: 1rem;
+  }
+  
+  .schede-grid {
+    grid-template-columns: 1fr;
+  }
+}

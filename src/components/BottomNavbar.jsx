@@ -1,42 +1,31 @@
-import { Home, Dumbbell, User, LineChart } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Home, ClipboardList, User, Activity } from 'lucide-react';
+import { NavLink } from 'react-router-dom';
 import '../pages/BottomNavbar.css';
 
 export default function BottomNavbar() {
-  const location = useLocation();
-  const isActive = (path) => location.pathname === path;
-
   return (
     <div className="bottom-navbar">
       <nav>
         <div className="nav-container">
-          <Link 
-            to="/" 
-            className={`nav-item ${isActive('/') ? 'active' : ''}`}
-          >
-            <Home className="icon" size={24} />
-          </Link>
+          <NavLink to="/home" className={({ isActive }) => isActive ? 'active' : ''}>
+            <Home className="icon" />
+            <span>Home</span>
+          </NavLink>
           
-          <Link 
-            to="/schede" 
-            className={`nav-item ${isActive('/schede') ? 'active' : ''}`}
-          >
-            <Dumbbell className="icon" size={24} />
-          </Link>
+          <NavLink to="/schede" className={({ isActive }) => isActive ? 'active' : ''}>
+            <ClipboardList className="icon" />
+            <span>Schede</span>
+          </NavLink>
           
-          <Link 
-            to="/progressi" 
-            className={`nav-item ${isActive('/progressi') ? 'active' : ''}`}
-          >
-            <LineChart className="icon" size={24} />
-          </Link>
+          <NavLink to="/progressi" className={({ isActive }) => isActive ? 'active' : ''}>
+            <Activity className="icon" />
+            <span>Progressi</span>
+          </NavLink>
           
-          <Link 
-            to="/profilo" 
-            className={`nav-item ${isActive('/profilo') ? 'active' : ''}`}
-          >
-            <User className="icon" size={24} />
-          </Link>
+          <NavLink to="/profilo" className={({ isActive }) => isActive ? 'active' : ''}>
+            <User className="icon" />
+            <span>Profilo</span>
+          </NavLink>
         </div>
       </nav>
     </div>

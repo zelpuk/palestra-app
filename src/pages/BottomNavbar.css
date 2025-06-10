@@ -10,11 +10,10 @@ body {
   left: 0;
   right: 0;
   z-index: 50;
-  background: #ff7300;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-  border-top: 2px solid #ff7300;
-  border-radius: 0;
-  padding: 10px 0;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 0;
   margin: 0;
   width: 100%;
 }
@@ -40,17 +39,43 @@ body {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #000000;
-  margin: 0;
-  padding: 0;
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.bottom-navbar a:hover {
+  color: #4CAF50;
+}
+
+.bottom-navbar a.active {
+  color: #4CAF50;
+  position: relative;
+}
+
+.bottom-navbar a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: #4CAF50;
+  border-radius: 50%;
 }
 
 .bottom-navbar .icon {
-  color: #ffffff;
-  stroke: #ffffff;
-  margin: 0;
+  width: 24px;
+  height: 24px;
+  stroke-width: 2;
+  transition: all 0.3s ease;
 }
 
-.bottom-navbar .active .icon {
-  stroke-width: 2px;
+.bottom-navbar a:hover .icon,
+.bottom-navbar a.active .icon {
+  transform: translateY(-2px);
 }

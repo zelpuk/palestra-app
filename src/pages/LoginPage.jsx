@@ -1,43 +1,26 @@
+import { Link } from 'react-router-dom';
 import LoginForm from "../components/LoginForm";
+import './LoginPage.css';
 
 export default function LoginPage() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#121212",
-        padding: "2rem",
-      }}
-    >
-      <h1 style={{ textAlign: "center", color: "#fff", fontSize: "2rem", fontWeight: "bold" }}>
-        Accedi alla tua palestra
-      </h1>
-      <div
-        style={{
-          background: "#1e1e1e",
-          padding: "2rem",
-          borderRadius: "12px",
-          boxShadow: "0px 6px 15px rgba(0,0,0,0.3)",
-          width: "90%",
-          maxWidth: "400px",
-        }}
-      >
+    <div className="login-container">
+      <div className="login-content">
+        <h1 className="login-title">Accedi</h1>
         <LoginForm />
-        <p style={{ textAlign: "center", marginTop: "1rem", color: "#bbb" }}>
-          <a href="/forgot-password" style={{ color: "#007bff", textDecoration: "none" }}>
-            Password dimenticata?
-          </a>
-        </p>
-        <p style={{ textAlign: "center", color: "#bbb" }}>
-          Non hai un account?{" "}
-          <a href="/register" style={{ color: "#007bff", textDecoration: "none" }}>
-            Registrati qui
-          </a>
-        </p>
+        <div className="login-links">
+          <p>
+            <Link to="/forgot-password" className="login-link">
+              Password dimenticata?
+            </Link>
+          </p>
+          <p style={{ marginTop: '0.5rem' }}>
+            Non hai un account?{' '}
+            <Link to="/register" className="login-link">
+              Registrati qui
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

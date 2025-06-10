@@ -4,8 +4,8 @@ export default function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
   
   if (!token) {
-    // Redirect to login if there is no token
-    return <Navigate to="/login" replace />;
+    // Redirect to splash page if there is no token
+    return <Navigate to="/" replace />;
   }
 
   return children;
