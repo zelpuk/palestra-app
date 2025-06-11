@@ -8,6 +8,19 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
+  const [stats, setStats] = useState({
+    calories: 0,
+    duration: 0,
+    goals: 0,
+    improvement: 0,    workout_distribution: {
+      Cardio: 0,
+      Forza: 0,
+      Funzionale: 0,
+      Bodyweight: 0
+    }
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -15,17 +28,55 @@ export default function Home() {
       setUserData(JSON.parse(user));
     }
   }, []);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Token non trovato');
+        }
+
+        const response = await fetch('https://wpschool.it/primoanno/meta/backend/api/get_user_stats.php', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Sessione scaduta');
+          }
+          throw new Error('Errore nel caricamento delle statistiche');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+          setStats(data.data);
+        } else {
+          throw new Error(data.error || 'Errore nel caricamento delle statistiche');
+        }
+      } catch (err) {
+        setError(err.message);
+        console.error('Errore nel caricamento delle statistiche:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const getUserFirstName = () => {
     if (!userData) return 'Atleta';
     // Prende il primo nome se ci sono più parole
     return userData.name.split(' ')[0];
   };
-
   const pieData = {
-    labels: ['Cardio', 'Forza', 'HIIT', 'Yoga'],
+    labels: Object.keys(stats.workout_distribution),
     datasets: [{
-      data: [35, 40, 15, 10],
+      data: Object.values(stats.workout_distribution),
       backgroundColor: [
         '#FF4B4B', // rosso acceso
         '#4CAF50', // verde primario
@@ -54,6 +105,29 @@ export default function Home() {
     },
     cutout: '70%'
   };
+  if (isLoading) {
+    return (
+      <div className="app-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Caricamento statistiche...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="app-container">
+        <div className="error-container">
+          <p className="error-message">{error}</p>
+          <button onClick={() => window.location.reload()} className="retry-button">
+            Riprova
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -62,14 +136,12 @@ export default function Home() {
         <p className="subtitle-text">
           Ecco il riepilogo dei tuoi progressi
         </p>
-      </div>
-
-      <div className="stats-grid">
+      </div><div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">
             <Flame size={24} color="white" />
           </div>
-          <span className="stat-value">423</span>
+          <span className="stat-value">{stats.calories}</span>
           <span className="stat-label">Calorie bruciate</span>
         </div>
 
@@ -77,7 +149,7 @@ export default function Home() {
           <div className="stat-icon">
             <Clock size={24} color="white" />
           </div>
-          <span className="stat-value">47 min</span>
+          <span className="stat-value">{stats.duration} min</span>
           <span className="stat-label">Tempo di allenamento</span>
         </div>
 
@@ -85,7 +157,7 @@ export default function Home() {
           <div className="stat-icon">
             <Award size={24} color="white" />
           </div>
-          <span className="stat-value">8</span>
+          <span className="stat-value">{stats.goals}</span>
           <span className="stat-label">Obiettivi raggiunti</span>
         </div>
 
@@ -93,7 +165,7 @@ export default function Home() {
           <div className="stat-icon">
             <TrendingUp size={24} color="white" />
           </div>
-          <span className="stat-value">+12%</span>
+          <span className="stat-value">{stats.improvement > 0 ? '+' : ''}{stats.improvement}%</span>
           <span className="stat-label">Miglioramento</span>
         </div>
       </div>

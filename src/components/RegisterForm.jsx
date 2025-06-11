@@ -97,18 +97,6 @@ export default function RegisterForm() {
         />
       </div>
 
-      <div className="form-group">
-        <select
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-          className="role-selector"
-        >
-          <option value="user">Utente</option>
-          <option value="admin">Amministratore</option>
-        </select>
-      </div>
-
       {form.role === "admin" && (
         <div className="form-group">
           <input

@@ -9,7 +9,10 @@ import Profilo from "./pages/Profilo";
 import Progressi from "./pages/Progressi";
 import BottomNavbar from "./components/BottomNavbar";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import "./pages/BottomNavbar.css";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -78,8 +81,14 @@ function App() {
             <Route
               path="/register"
               element={isAuthenticated ? <Navigate to="/home" replace /> : <RegisterPage />}
+            />            <Route
+              path="/forgot-password"
+              element={<ForgotPasswordPage />}
             />
-
+            <Route
+              path="/reset-password"
+              element={<ResetPasswordPage />}
+            />
             {/* Fallback per rotte non esistenti */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

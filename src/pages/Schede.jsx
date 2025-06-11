@@ -19,9 +19,8 @@ export default function Schede() {
       duration: "45 min",
       difficulty: "Avanzato"
     },
-    {
-      id: 3,
-      name: "Recupero Attivo",
+    {      id: 3,
+      name: "Bodyweight e Funzionale",
       date: "Iniziata il 5 Giugno 2025",
       exercises: 6,
       duration: "30 min",
