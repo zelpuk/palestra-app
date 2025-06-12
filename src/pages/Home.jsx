@@ -2,17 +2,20 @@ import { Flame, Clock, Award, TrendingUp } from 'lucide-react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function Home() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [stats, setStats] = useState({
     calories: 0,
     duration: 0,
     goals: 0,
-    improvement: 0,    workout_distribution: {
+    improvement: 0,
+    workout_distribution: {
       Cardio: 0,
       Forza: 0,
       Funzionale: 0,
@@ -32,26 +35,60 @@ export default function Home() {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
+        console.log('Token nel localStorage:', token);
+
         if (!token) {
-          throw new Error('Token non trovato');
+          console.log('Nessun token trovato, reindirizzo al login');
+          navigate('/login', { replace: true });
+          return;
         }
 
-        const response = await fetch('https://wpschool.it/primoanno/meta/backend/api/get_user_stats.php', {
+        console.log('Invio richiesta con token:', token);
+
+        const response = await fetch('https://wpschool.it/primoanno/meta/backend/auth/get_user_stats.php', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-Authorization': `Bearer ${token}` // Cambiamo il nome dell'header
+          },
+          mode: 'cors'
         });
 
+        console.log('Status risposta:', response.status);
+        console.log('Headers risposta:', Object.fromEntries(response.headers));
+        const responseText = await response.text();
+        console.log('Testo risposta:', responseText);
+
         if (!response.ok) {
-          if (response.status === 401) {
-            throw new Error('Sessione scaduta');
+          let errorMessage = 'Errore nel caricamento delle statistiche';
+          try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.error || errorMessage;
+            console.error('Errore dal server:', errorData);
+          } catch (e) {
+            console.error('Errore nel parsing della risposta:', e);
           }
-          throw new Error('Errore nel caricamento delle statistiche');
+
+          if (response.status === 401) {
+            console.log('Token non valido o scaduto, reindirizzo al login');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.dispatchEvent(new Event('storage'));
+            navigate('/login', { replace: true });
+            return;
+          }
+          throw new Error(errorMessage);
         }
 
-        const data = await response.json();
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (e) {
+          console.error('Errore nel parsing della risposta JSON:', e);
+          throw new Error('Risposta del server non valida');
+        }
+
         if (data.success) {
           setStats(data.data);
         } else {
@@ -66,7 +103,7 @@ export default function Home() {
     };
 
     fetchStats();
-  }, []);
+  }, [navigate]);
 
   const getUserFirstName = () => {
     if (!userData) return 'Atleta';
