@@ -13,46 +13,81 @@ export default function RegisterForm() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    // Reset degli errori quando l'utente inizia a digitare
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setIsLoading(true);
 
+    // Validazione
     if (!form.name || !form.email || !form.password) {
       setError("Compila tutti i campi obbligatori.");
+      setIsLoading(false);
       return;
     }
+
+    // Validazione email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      setError("Inserisci un indirizzo email valido.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Validazione password
+    if (form.password.length < 6) {
+      setError("La password deve essere di almeno 6 caratteri.");
+      setIsLoading(false);
+      return;
+    }
+
     if (form.role === "admin" && !form.admin_code) {
       setError("Inserisci il codice admin.");
+      setIsLoading(false);
       return;
     }
 
     try {
       const res = await fetch("https://wpschool.it/primoanno/meta/backend/auth/register.php", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(form)
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Errore durante la registrazione.");
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
       } else {
-        setSuccess("Registrazione avvenuta con successo!");
-        // Breve delay per mostrare il messaggio di successo
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
+        throw new Error("Risposta non valida dal server");
+      }      if (!res.ok) {
+        const errorMessage = data.error || "Errore durante la registrazione";
+        console.error('Dettagli errore dal server:', data);
+        throw new Error(errorMessage);
       }
+
+      setSuccess("Registrazione avvenuta con successo!");
+      // Breve delay per mostrare il messaggio di successo
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
     } catch (error) {
       console.error('Errore durante la registrazione:', error);
-      setError("Errore di rete, riprova.");
+      setError(error.message || "Errore di rete, riprova più tardi.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -110,8 +145,8 @@ export default function RegisterForm() {
         </div>
       )}
 
-      <button type="submit" className="register-button">
-        Registrati
+      <button type="submit" className="register-button" disabled={isLoading}>
+        {isLoading ? "Registrazione in corso..." : "Registrati"}
       </button>
     </form>
   );

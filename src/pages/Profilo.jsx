@@ -13,12 +13,11 @@ export default function Profilo() {
       setUserData(JSON.parse(user));
     }
   }, []);
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.dispatchEvent(new Event('storage'));
-    navigate('/', { replace: true });
+    navigate('/', { replace: true }); // La SplashPage è già sulla rotta '/'
   };
 
   if (!userData) {

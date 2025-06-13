@@ -35,11 +35,9 @@ export default function Home() {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
-        console.log('Token nel localStorage:', token);
-
-        if (!token) {
-          console.log('Nessun token trovato, reindirizzo al login');
-          navigate('/login', { replace: true });
+        console.log('Token nel localStorage:', token);        if (!token) {
+          console.log('Nessun token trovato, reindirizzo alla pagina di copertina');
+          navigate('/', { replace: true });
           return;
         }
 
